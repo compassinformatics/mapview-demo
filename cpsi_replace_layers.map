@@ -1,0 +1,240 @@
+MAP
+    EXTENT -1981303.751 5648520.031 522771.571 8580038.317
+    CONFIG "PROJ_LIB" "C:\MapServer\bin\proj\SHARE"
+    NAME "REPLACE"
+    IMAGETYPE png24
+    SIZE 400 300
+    DEBUG 5 # a value from 0 (OFF) to 5 (detailed)
+    CONFIG "MS_ERRORFILE" "logs\ms.log"
+    WEB
+      METADATA
+        "ows_enable_request" "*"
+      END
+    END
+    LEGEND
+      KEYSIZE 12 12
+      LABEL
+        TYPE BITMAP
+        SIZE MEDIUM
+        COLOR 0 0 89
+      END
+      STATUS ON
+    END
+    PROJECTION
+      "init=epsg:3857"
+    END
+    SYMBOL
+        TYPE ellipse
+        FILLED true
+        POINTS 1 1 END
+        NAME "filled_circle"
+    END
+    SYMBOL
+        TYPE ellipse
+        POINTS 1 1 END
+        NAME "ring"
+    END
+    SYMBOL
+        NAME "cross"
+        TYPE vector
+        POINTS
+          2.0 0.0
+          2.0 4.0
+          -99 -99
+          0.0 2.0
+          4.0 2.0
+        END
+    END
+    SYMBOL
+      NAME "triangle"
+      TYPE vector
+      POINTS
+        0 4
+        2 0
+        4 4
+        0 4
+      END
+    END
+    LAYER
+      NAME "fery_routes"
+      DATA 'data/Ferry_Route.shp'
+      PROJECTION
+        "init=epsg:4326"
+      END
+      STATUS ON
+      TYPE LINE
+      CLASS
+        NAME 'FerryRoutes'
+        STYLE
+          COLOR '#12CBE5'
+          WIDTH 1.2
+          PATTERN 10 5 5 10 END
+        END
+      END
+    END
+
+    LAYER
+      NAME "pois"
+      DATA 'data/pois.shp'
+      PROJECTION
+        "init=epsg:3857"
+      END
+      STATUS ON
+      TYPE POINT
+      #LABELITEM "name"
+      CLASSITEM "fclass"
+      CLASS
+          EXPRESSION ("[fclass]" = "ruins")
+          NAME 'POI: Ruins'
+          STYLE
+            SYMBOL "cross"
+            SIZE 8
+            COLOR "#ffd966"
+          END
+      END
+      CLASS
+          EXPRESSION ("[fclass]" = "tourist_info")
+          NAME 'POI: Tourist Info'
+          STYLE
+            SYMBOL "triangle"
+            SIZE 2
+            COLOR "#fabebe"
+          END
+          LABEL
+            ANGLE AUTO
+            COLOR  49 79 79
+            STYLE
+              GEOMTRANSFORM LABELPOLY
+              COLOR 0 0 0
+              OUTLINECOLOR 255 0 0 
+            END
+            OUTLINECOLOR 0 0 0
+            FONT "sans"
+            TYPE truetype
+            SIZE 60
+            POSITION AUTO
+            PARTIALS TRUE
+          END
+      END
+    END
+
+    LAYER
+      NAME "Boreholes"
+      DATA 'data/BoreholesING.shp'
+      PROJECTION
+        "init=epsg:29902"
+      END
+      STATUS ON
+      TYPE POINT
+      CLASSITEM "COMP"
+      CLASS
+        EXPRESSION ("[COMP]" = "AMAX")
+        NAME 'Boreholes: AMAX'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 255 0 0
+          OUTLINECOLOR 0 0 255
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "AMOC")
+        NAME 'Boreholes: AMOC'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 0 255 0
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "AVOC")
+        NAME 'Boreholes: AVOC'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 0 255 255
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "CHEV")
+        NAME 'Boreholes: CHEV'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 255 255 0
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "ROAD")
+        NAME 'Boreholes: ROAD'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 255 225 255
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "GSI")
+        NAME 'Boreholes: GSI'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 68 192 170
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "SHAL")
+        NAME 'Boreholes: SHAL'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 227 33 132
+        END 
+      END
+      CLASS
+        EXPRESSION ("[COMP]" = "PENN")
+        NAME 'Boreholes: PENN'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 25 33 132
+        END 
+      END
+    END
+
+    LAYER
+      NAME "waterbodies"
+      DATA 'data/waterbodies.shp'
+      PROJECTION
+        "init=epsg:3857"
+      END
+      STATUS ON
+      TYPE POLYGON
+      CLASS
+        NAME 'Waterbodies'
+        STYLE
+          COLOR '#365F83'
+        END
+      END 
+    END
+
+    LAYER
+      NAME "municpal_bounds"
+      DATA 'data/Municipal_Districts__OSi_National_Statutory_Boundaries_3857.shp'
+      PROJECTION
+        "init=epsg:3857"
+      END
+      STATUS ON
+      TYPE POLYGON
+      CLASS
+        NAME 'Bounds'
+        STYLE
+          COLOR 150 150 150
+          #  OUTLINECOLOR 225 225 225
+        END # STYLE
+      END # CLASS
+    END # LAYER
+
+END
+
+
