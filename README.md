@@ -4,7 +4,7 @@ MapServer  Setup for MapView Demo
 ## Datasets
 
  - Ferry Routes
- 	- Linestring
+ 	- Linestrings
  - Boreholes
  	- Points
  - Municiple Boundaries
