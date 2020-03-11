@@ -1,0 +1,93 @@
+{
+  "id": "root",
+  "children": [
+    {
+      "id": "point-folder",
+      "title": "Point Features",
+      "children": [
+        {
+          "id": "TOURIST_INFO_LAYER",
+          "isLeaf": true
+        },
+        {
+          "id": "RUINS_LAYER",
+          "isLeaf": true
+        },
+        {
+          "id": "BOREHOLES_LAYER",
+          "isLeaf": true
+        }
+      ]
+    },
+    {
+      "id": "ploygon-folder",
+      "title": "Polygon Features",
+      "children": [
+        {
+          "id": "CEMETERIES_LAYER",
+          "isLeaf": true
+        },
+        {
+          "id": "WATERBODIES_LAYER",
+          "isLeaf": true
+        },
+        {
+          "id": "MUNICIPLE_DISTRICTS_LAYER",
+          "isLeaf": true
+        }
+      ]
+    },
+    {
+      "id": "line-folder",
+      "title": "Line Features",
+      "children": [
+        {
+          "id": "FERRY_ROUTES_LAYER",
+          "isLeaf": true
+        },
+        {
+          "id": "WATERWAYS_LAYER",
+          "isLeaf": true
+        }
+      ]
+    },
+    {
+      "id": "wfs-folder",
+      "title": "WFS Features",
+      "children": [
+        {
+          "id": "GAS_WFS",
+          "isLeaf": true
+        },
+        {
+          "id": "COUNTRY_WFS",
+          "isLeaf": true
+        }
+      ]
+    },
+    {
+      "id": "wms-folder",
+      "title": "WMS Features",
+      "children": [
+        {
+          "id": "OSM_WMS",
+          "isLeaf": true
+        }
+      ]
+    },
+    {
+      "id": "base-folder",
+      "title": "Base Layers",
+      "children": [
+        {
+          "id": "OSM_BACKGROUND",
+          "isLeaf": true
+        },
+        {
+          "id": "GREY_BACKGROUND",
+          "isLeaf": true
+        }
+      ]
+    }
+  ]
+}
