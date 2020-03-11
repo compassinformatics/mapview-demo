@@ -1,11 +1,9 @@
 MAP
     EXTENT -1981303.751 5648520.031 522771.571 8580038.317
-    CONFIG "PROJ_LIB" "C:\MapServer\bin\proj\SHARE"
+    CONFIG "PROJ_LIB" "\\MapServer\bin\proj\SHARE"
     NAME "MapviewDemo"
     IMAGETYPE png24
     SIZE 400 300
-    DEBUG 5 # a value from 0 (OFF) to 5 (detailed)
-    CONFIG "MS_ERRORFILE" "logs\ms.log"
     WEB
       METADATA
         "ows_enable_request" "*"
