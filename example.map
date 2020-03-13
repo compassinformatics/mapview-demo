@@ -1,14 +1,54 @@
 MAP
+    NAME "MapviewDemo"
     EXTENT -1981303.751 5648520.031 522771.571 8580038.317
     CONFIG "PROJ_LIB" "\\MapServer\bin\proj\SHARE"
-    NAME "MapviewDemo"
+    CONFIG "MS_ERRORFILE" "log/mapserver.log"	
+	FONTSET "fonts/fontset.txt"
+	DEBUG 5
     IMAGETYPE png24
     SIZE 400 300
     WEB
       METADATA
         "ows_enable_request" "*"
+		"wfs_srs" "EPSG:3857 EPSG:2157 EPSG:29902 EPSG:4326"
+        "wfs_getfeature_formatlist" "gml,geojson,json,application/json"		
       END
     END
+    OUTPUTFORMAT
+        NAME "mvt"
+        DRIVER MVT
+        #FORMATOPTION "EXTENT=512" # default is 4096
+        FORMATOPTION "EDGE_BUFFER=20"
+    END
+	
+    OUTPUTFORMAT
+        NAME "png"
+        MIMETYPE "image/png"
+        DRIVER "GDAL/PNG"
+        EXTENSION "png"
+        IMAGEMODE RGBA
+        TRANSPARENT TRUE
+    END
+	
+	OUTPUTFORMAT
+        NAME "application/json"
+        DRIVER "OGR/GEOJSON"
+        MIMETYPE "application/json; subtype=geojson; charset=utf-8"
+        FORMATOPTION "FORM=SIMPLE"
+        FORMATOPTION "STORAGE=memory"
+        FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
+    END
+	
+    OUTPUTFORMAT
+        NAME "json"
+        DRIVER "OGR/GEOJSON"
+        #MIMETYPE "application/json"
+        MIMETYPE "application/json; subtype=geojson; charset=utf-8"
+        FORMATOPTION "FORM=SIMPLE"
+        FORMATOPTION "STORAGE=memory" # filesystem and memory both work (only use one)
+        FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
+    END
+	
     LEGEND
       KEYSIZE 12 12
       LABEL
@@ -16,7 +56,6 @@ MAP
         SIZE MEDIUM
         COLOR 0 0 89
       END
-      STATUS ON
     END
     PROJECTION
       "init=epsg:3857"
@@ -59,7 +98,6 @@ MAP
       PROJECTION
         "init=epsg:4326"
       END
-      STATUS ON
       TYPE LINE
       CLASS
         NAME 'FerryRoutes'
@@ -77,7 +115,6 @@ MAP
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
       TYPE POINT
       CLASSITEM "fclass"
       CLASS
@@ -97,11 +134,15 @@ MAP
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "osm_id"
+      END	  
       TYPE POINT
-      CLASSITEM "fclass"
+	  FILTER ("[fclass]" = "ruins")
       CLASS
-          EXPRESSION ("[fclass]" = "ruins")
+          #EXPRESSION ("[fclass]" = "ruins")
           NAME 'POI: Ruins'
           STYLE
             SYMBOL "cross"
@@ -113,16 +154,26 @@ MAP
 
     LAYER
       NAME "Boreholes"
+	  
+	  METADATA
+	    "wfs_srs" "epsg:29902"
+		"ows_timeextent" "1900/2040"
+		"ows_timeitem" "YEAR"			
+		"gml_include_items" "all"
+		"gml_types" "auto"
+		"gml_featureid" "ID"
+      END	 
+	  	  
       DATA 'data/BoreholesING.shp'
       PROJECTION
         "init=epsg:29902"
       END
-      STATUS ON
       TYPE POINT
-      CLASSITEM "COMP"
+      CLASSGROUP "Type"	  
       CLASS
+	    GROUP "Type"
         EXPRESSION ("[COMP]" = "AMAX")
-        NAME 'Boreholes: AMAX'
+        NAME 'AMAX'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -131,8 +182,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "AMOC")
-        NAME 'Boreholes: AMOC'
+        NAME 'AMOC'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -140,8 +192,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "AVOC")
-        NAME 'Boreholes: AVOC'
+        NAME 'AVOC'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -149,8 +202,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "CHEV")
-        NAME 'Boreholes: CHEV'
+        NAME 'CHEV'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -158,8 +212,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "ROAD")
-        NAME 'Boreholes: ROAD'
+        NAME 'ROAD'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -167,8 +222,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "GSI")
-        NAME 'Boreholes: GSI'
+        NAME 'GSI'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -176,8 +232,9 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "SHAL")
-        NAME 'Boreholes: SHAL'
+        NAME 'SHAL'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
@@ -185,30 +242,160 @@ MAP
         END 
       END
       CLASS
+	    GROUP "Type"	  
         EXPRESSION ("[COMP]" = "PENN")
-        NAME 'Boreholes: PENN'
+        NAME 'PENN'
         STYLE
           SYMBOL "filled_circle"
           SIZE 3
           COLOR 25 33 132
         END 
       END
+	  
+      CLASS
+	    GROUP "Depth"	  
+        EXPRESSION ([OD_METRES] >= 0 AND [OD_METRES] <= 50)
+        NAME '0 to 50m'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 68 192 170
+        END 
+      END
+      CLASS
+	    GROUP "Depth"	  
+        EXPRESSION ([OD_METRES] > 50 AND [OD_METRES] <= 100)
+        NAME '0 to 100m'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 227 33 132
+        END 
+      END
+      CLASS
+	    GROUP "Depth"	  
+        EXPRESSION ([OD_METRES] > 100)
+        NAME '> 100m'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 3
+          COLOR 25 33 132
+        END 
+      END
+	  
+      CLASS
+	    GROUP "Unthemed"
+        NAME 'Borehole'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 6
+          COLOR 50 50 50
+          OUTLINECOLOR 0 0 0
+        END 
+      END
+	  
+    CLASS
+        GROUP "labels"
+        TEXT "[ID]"
+        LABEL
+            ANGLE AUTO
+            COLOR  49 79 79
+            OUTLINECOLOR 255 255 255
+            FONT "arial"
+            TYPE truetype
+            SIZE 10
+            POSITION AUTO
+            PARTIALS FALSE
+        END
+    END	  
+	  
     END
 
     LAYER
       NAME "waterbodies"
       DATA 'data/waterbodies.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "osm_id"
+      END	  
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
       TYPE POLYGON
+	  
+      CLASSGROUP "Waterbodies"
+	  
       CLASS
+	    GROUP "Waterbodies"
         NAME 'Waterbodies'
         STYLE
           COLOR '#365F83'
         END
       END 
+	
+	  CLASS
+	    GROUP "Type"
+        EXPRESSION ("[fclass]" = "dock")
+        NAME 'Dock'
+        STYLE
+          COLOR '#f7fbff'
+        END 
+      END		
+	  CLASS
+	    GROUP "Type"
+        EXPRESSION ("[fclass]" = "reservoir")
+        NAME 'Reservoir'
+        STYLE
+          COLOR '#d1e3f3'
+        END 
+      END	
+	  CLASS
+	    GROUP "Type"
+        EXPRESSION ("[fclass]" = "river")
+        NAME 'River'
+        STYLE
+          COLOR '#9ac8e1'
+        END 
+      END
+      CLASS
+	    GROUP "Type"
+        EXPRESSION ("[fclass]" = "water")
+        NAME 'Water'
+        STYLE
+          COLOR '#529dcc'
+        END 
+      END		  
+      CLASS
+	    GROUP "Type"
+        EXPRESSION ("[fclass]" = "wetland")
+        NAME 'Wetland'
+        STYLE
+          COLOR '#1c6cb1'
+        END 
+      END		  
+      CLASS
+	    GROUP "Type"
+        NAME 'Other'
+        STYLE
+          COLOR '#08306b'
+        END 
+      END
+	  
+      CLASS
+          GROUP "labels"
+          TEXT "[osm_id]"
+          LABEL
+              ANGLE AUTO
+              COLOR  49 79 79
+              OUTLINECOLOR 255 255 255
+              FONT "arial"
+              TYPE truetype
+              SIZE 10
+              POSITION AUTO
+              PARTIALS FALSE
+          END
+      END	 	  
     END
 
     LAYER
@@ -217,7 +404,6 @@ MAP
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
       TYPE LINE
       COMPOSITE
         OPACITY 10
@@ -236,7 +422,6 @@ MAP
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
       TYPE POLYGON
       CLASS
         NAME 'Bounds'
@@ -253,7 +438,6 @@ MAP
       PROJECTION
         "init=epsg:3857"
       END
-      STATUS ON
       TYPE POLYGON
       CLASS
         NAME 'Cemeteries'

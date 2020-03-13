@@ -1,0 +1,2 @@
+tahoma	tahoma.ttf
+arial	arial.ttf
