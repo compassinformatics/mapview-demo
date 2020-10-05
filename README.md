@@ -49,5 +49,20 @@ icacls "C:\MapServer\apps\mapview-demo\log" /grant "IIS AppPool\DefaultAppPool":
 
 TODO
 
+## Command Line Testing
+
+Sample commands for testing WFS responses locally. 
+
+```bat
+
+cd /D D:\GitHub\mapview-demo
+
+mapserv -nh "QUERY_STRING=map=example.map&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typeName=ruins&outputFormat=geojson&sortBy=osm_id ASC"
+
+mapserv -nh "QUERY_STRING=map=example.map&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typeName=ruins&outputFormat=geojson&sortBy=osm_id ASC"
+mapserv -nh "QUERY_STRING=map=example.map&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&typeName=ruins&outputFormat=geojson&sortBy=osm_id ASC&startIndex=0&count=200"
+
+ogrinfo data/pois.shp
+```
 
 

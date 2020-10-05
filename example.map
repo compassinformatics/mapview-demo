@@ -2,16 +2,22 @@ MAP
     NAME "MapviewDemo"
     EXTENT -1981303.751 5648520.031 522771.571 8580038.317
     CONFIG "PROJ_LIB" "\\MapServer\bin\proj\SHARE"
-    CONFIG "MS_ERRORFILE" "log/mapserver.log"	
-	FONTSET "fonts/fontset.txt"
-	DEBUG 5
+    CONFIG "MS_ERRORFILE" "log/mapserver.log"
+    CONFIG "CPL_DEBUG" "OFF"
+    FONTSET "fonts/fontset.txt"
+    DEBUG OFF
     IMAGETYPE png24
     SIZE 400 300
     WEB
       METADATA
         "ows_enable_request" "*"
-		"wfs_srs" "EPSG:3857 EPSG:2157 EPSG:29902 EPSG:4326"
-        "wfs_getfeature_formatlist" "gml,geojson,json,application/json"		
+        "wfs_onlineresource" "http://w08-mapserver.compass.ie/mapserver/?map=/MapServer/apps/mapview-demo/example.map&"
+        "wfs_srs" "EPSG:3857 EPSG:2157 EPSG:29902 EPSG:4326 EPSG:3978"
+        "wfs_getfeature_formatlist" "gml,geojson,json,application/json"
+        "wms_getfeatureinfo_formatlist" "gml,geojson,json,application/json"
+
+        "wfs_compute_number_matched" "true"
+        #"wfs_features_cache_count" "10000"
       END
     END
     OUTPUTFORMAT
@@ -20,7 +26,7 @@ MAP
         #FORMATOPTION "EXTENT=512" # default is 4096
         FORMATOPTION "EDGE_BUFFER=20"
     END
-	
+    
     OUTPUTFORMAT
         NAME "png"
         MIMETYPE "image/png"
@@ -29,8 +35,8 @@ MAP
         IMAGEMODE RGBA
         TRANSPARENT TRUE
     END
-	
-	OUTPUTFORMAT
+    
+    OUTPUTFORMAT
         NAME "application/json"
         DRIVER "OGR/GEOJSON"
         MIMETYPE "application/json; subtype=geojson; charset=utf-8"
@@ -38,17 +44,25 @@ MAP
         FORMATOPTION "STORAGE=memory"
         FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
     END
-	
+    
     OUTPUTFORMAT
         NAME "json"
         DRIVER "OGR/GEOJSON"
-        #MIMETYPE "application/json"
         MIMETYPE "application/json; subtype=geojson; charset=utf-8"
         FORMATOPTION "FORM=SIMPLE"
         FORMATOPTION "STORAGE=memory" # filesystem and memory both work (only use one)
         FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
     END
-	
+    
+    OUTPUTFORMAT
+        NAME "geojson"
+        DRIVER "OGR/GEOJSON"
+        MIMETYPE "application/json; subtype=geojson; charset=utf-8"
+        FORMATOPTION "FORM=SIMPLE"
+        FORMATOPTION "STORAGE=memory" # filesystem and memory both work (only use one)
+        FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
+    END
+    
     LEGEND
       KEYSIZE 12 12
       LABEL
@@ -94,10 +108,16 @@ MAP
     END
     LAYER
       NAME "ferry_routes"
+      TEMPLATE "ttt"
       DATA 'data/Ferry_Route.shp'
       PROJECTION
         "init=epsg:4326"
       END
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "gml_id"
+      END      
       TYPE LINE
       CLASS
         NAME 'FerryRoutes'
@@ -111,11 +131,17 @@ MAP
 
     LAYER
       NAME "tourist_info"
+      TEMPLATE "ttt"
       DATA 'data/pois.shp'
       PROJECTION
         "init=epsg:3857"
       END
       TYPE POINT
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "osm_id"
+      END      
       CLASSITEM "fclass"
       CLASS
           EXPRESSION ("[fclass]" = "tourist_info")
@@ -130,17 +156,29 @@ MAP
 
     LAYER
       NAME "ruins"
-      DATA 'data/pois.shp'
-      PROJECTION
-        "init=epsg:3857"
-      END
+      TEMPLATE "ttt"
+      CONNECTIONTYPE OGR
+      CONNECTION 'data/pois.shp'
       METADATA
+          
+          "ows_title" "Ruins"
+          "ows_abstract" "Extract of ruins from OSM"
+          "ows_keywordlist" "ruins,buildings"
+          "ows_attribution_title" "OSM"
+
           "gml_include_items" "all"
           "gml_types" "auto"
           "gml_featureid" "osm_id"
-      END	  
+      END      
+      #DATA "pois"
+      #DATA 'data/pois.shp'
+      #DATA "data/pois"
+      PROJECTION
+        "init=epsg:3857"
+      END
+
       TYPE POINT
-	  FILTER ("[fclass]" = "ruins")
+      FILTER ("[fclass]" = "ruins")
       CLASS
           #EXPRESSION ("[fclass]" = "ruins")
           NAME 'POI: Ruins'
@@ -154,24 +192,24 @@ MAP
 
     LAYER
       NAME "Boreholes"
-	  
-	  METADATA
-	    "wfs_srs" "epsg:29902"
-		"ows_timeextent" "1900/2040"
-		"ows_timeitem" "YEAR"			
-		"gml_include_items" "all"
-		"gml_types" "auto"
-		"gml_featureid" "ID"
-      END	 
-	  	  
+      TEMPLATE "ttt"
+      METADATA
+        "wfs_srs" "epsg:29902"
+        "ows_timeextent" "1900/2040"
+        "ows_timeitem" "YEAR"
+        "gml_include_items" "all"
+        "gml_types" "auto"
+        "gml_featureid" "ID"
+      END     
+
       DATA 'data/BoreholesING.shp'
       PROJECTION
         "init=epsg:29902"
       END
       TYPE POINT
-      CLASSGROUP "Type"	  
+      CLASSGROUP "Type"
       CLASS
-	    GROUP "Type"
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "AMAX")
         NAME 'AMAX'
         STYLE
@@ -182,7 +220,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"      
         EXPRESSION ("[COMP]" = "AMOC")
         NAME 'AMOC'
         STYLE
@@ -192,7 +230,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "AVOC")
         NAME 'AVOC'
         STYLE
@@ -202,7 +240,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "CHEV")
         NAME 'CHEV'
         STYLE
@@ -212,7 +250,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "ROAD")
         NAME 'ROAD'
         STYLE
@@ -222,7 +260,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "GSI")
         NAME 'GSI'
         STYLE
@@ -232,7 +270,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "SHAL")
         NAME 'SHAL'
         STYLE
@@ -242,7 +280,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"	  
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "PENN")
         NAME 'PENN'
         STYLE
@@ -251,9 +289,9 @@ MAP
           COLOR 25 33 132
         END 
       END
-	  
+      
       CLASS
-	    GROUP "Depth"	  
+        GROUP "Depth"
         EXPRESSION ([OD_METRES] >= 0 AND [OD_METRES] <= 50)
         NAME '0 to 50m'
         STYLE
@@ -263,7 +301,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Depth"	  
+        GROUP "Depth"
         EXPRESSION ([OD_METRES] > 50 AND [OD_METRES] <= 100)
         NAME '0 to 100m'
         STYLE
@@ -273,7 +311,7 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Depth"	  
+        GROUP "Depth"
         EXPRESSION ([OD_METRES] > 100)
         NAME '> 100m'
         STYLE
@@ -282,9 +320,9 @@ MAP
           COLOR 25 33 132
         END 
       END
-	  
+
       CLASS
-	    GROUP "Unthemed"
+        GROUP "Unthemed"
         NAME 'Borehole'
         STYLE
           SYMBOL "filled_circle"
@@ -293,7 +331,7 @@ MAP
           OUTLINECOLOR 0 0 0
         END 
       END
-	  
+
     CLASS
         GROUP "labels"
         TEXT "[ID]"
@@ -307,51 +345,52 @@ MAP
             POSITION AUTO
             PARTIALS FALSE
         END
-    END	  
-	  
+    END
+
     END
 
     LAYER
       NAME "waterbodies"
       DATA 'data/waterbodies.shp'
+      TEMPLATE 'ttt'
       METADATA
           "gml_include_items" "all"
           "gml_types" "auto"
           "gml_featureid" "osm_id"
-      END	  
+      END
       PROJECTION
         "init=epsg:3857"
       END
       TYPE POLYGON
-	  
+
       CLASSGROUP "Waterbodies"
-	  
+
       CLASS
-	    GROUP "Waterbodies"
+        GROUP "Waterbodies"
         NAME 'Waterbodies'
         STYLE
           COLOR '#365F83'
         END
       END 
-	
-	  CLASS
-	    GROUP "Type"
+
+      CLASS
+        GROUP "Type"
         EXPRESSION ("[fclass]" = "dock")
         NAME 'Dock'
         STYLE
           COLOR '#f7fbff'
         END 
-      END		
-	  CLASS
-	    GROUP "Type"
+      END
+      CLASS
+        GROUP "Type"
         EXPRESSION ("[fclass]" = "reservoir")
         NAME 'Reservoir'
         STYLE
           COLOR '#d1e3f3'
         END 
-      END	
-	  CLASS
-	    GROUP "Type"
+      END
+      CLASS
+        GROUP "Type"
         EXPRESSION ("[fclass]" = "river")
         NAME 'River'
         STYLE
@@ -359,29 +398,29 @@ MAP
         END 
       END
       CLASS
-	    GROUP "Type"
+        GROUP "Type"
         EXPRESSION ("[fclass]" = "water")
         NAME 'Water'
         STYLE
           COLOR '#529dcc'
         END 
-      END		  
+      END
       CLASS
-	    GROUP "Type"
+        GROUP "Type"
         EXPRESSION ("[fclass]" = "wetland")
         NAME 'Wetland'
         STYLE
           COLOR '#1c6cb1'
         END 
-      END		  
+      END
       CLASS
-	    GROUP "Type"
+        GROUP "Type"
         NAME 'Other'
         STYLE
           COLOR '#08306b'
         END 
       END
-	  
+      
       CLASS
           GROUP "labels"
           TEXT "[osm_id]"
@@ -395,12 +434,17 @@ MAP
               POSITION AUTO
               PARTIALS FALSE
           END
-      END	 	  
+      END
     END
 
     LAYER
       NAME "waterways"
       DATA 'data/waterways.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "osm_id"
+      END
       PROJECTION
         "init=epsg:3857"
       END
@@ -409,6 +453,7 @@ MAP
         OPACITY 10
       END # COMPOSITE
       CLASS
+        GROUP 'Waterways'
         NAME 'Waterways'
         STYLE
           COLOR '#365F83'
@@ -417,12 +462,18 @@ MAP
     END
 
     LAYER
-      NAME "municpal_bounds"
+      NAME "municipal_bounds"
+      TEMPLATE "ttt"
       DATA 'data/Municipal_Districts__OSi_National_Statutory_Boundaries_3857.shp'
       PROJECTION
         "init=epsg:3857"
       END
       TYPE POLYGON
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "md_id"
+      END
       CLASS
         NAME 'Bounds'
         STYLE
@@ -434,11 +485,21 @@ MAP
 
     LAYER
       NAME "cemeteries"
-      DATA 'data/cemeteries.shp'
+      TEMPLATE "ttt"
+      #DATA 'data/cemeteries.shp'
+
+      CONNECTIONTYPE OGR
+      CONNECTION 'data/cemeteries.shp'
+
       PROJECTION
         "init=epsg:3857"
       END
       TYPE POLYGON
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "osm_id"
+      END
       CLASS
         NAME 'Cemeteries'
         STYLE
