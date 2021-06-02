@@ -508,6 +508,34 @@ MAP
       END # CLASS
     END # LAYER
 
+
+    LAYER
+      NAME "lasites"
+      DEBUG 5
+      TEMPLATE "ttt"
+
+      CONNECTIONTYPE OGR
+      CONNECTION 'data/Local_Authority_Sites.shp'
+
+      PROJECTION
+        "init=epsg:2157"
+      END
+      TYPE POINT
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "OBJECTID"
+      END
+      CLASS
+        NAME 'Sites'
+        STYLE
+          SYMBOL "filled_circle"
+          SIZE 5        
+          COLOR 218 112 214
+        END # STYLE
+      END # CLASS
+    END # LAYER
+    
 END
 
 
