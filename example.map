@@ -1,7 +1,7 @@
 MAP
     NAME "MapviewDemo"
     EXTENT -1981303.751 5648520.031 522771.571 8580038.317
-    CONFIG "PROJ_LIB" "\\MapServer\bin\proj\SHARE"
+    CONFIG "PROJ_LIB" "\\MapServer\bin\proj7\SHARE"
     CONFIG "MS_ERRORFILE" "log/mapserver.log"
     CONFIG "CPL_DEBUG" "OFF"
     FONTSET "fonts/fontset.txt"
@@ -11,7 +11,8 @@ MAP
     WEB
       METADATA
         "ows_enable_request" "*"
-        "wfs_onlineresource" "http://w08-mapserver.compass.ie/mapserver/?map=/MapServer/apps/mapview-demo/example.map&"
+        "wfs_onlineresource" "http://mapserver.compass.ie/mapserver/?map=/MapServer/apps/mapview-demo/example.map&"
+        #"wfs_onlineresource" "http://localhost/mapserver2/?map=/MapServer/apps/mapview-demo/example.map&"
         "wfs_srs" "EPSG:3857 EPSG:2157 EPSG:29902 EPSG:4326 EPSG:3978"
         "wfs_getfeature_formatlist" "gml,geojson,json,application/json"
         "wms_getfeatureinfo_formatlist" "gml,geojson,json,application/json"
@@ -42,6 +43,7 @@ MAP
         MIMETYPE "application/json; subtype=geojson; charset=utf-8"
         FORMATOPTION "FORM=SIMPLE"
         FORMATOPTION "STORAGE=memory"
+        FORMATOPTION "USE_FEATUREID=true" # adds a id property to each record that OL then automatically sets on each feature
         FORMATOPTION "LCO:NATIVE_MEDIA_TYPE=application/vnd.geo+json"
     END
     
@@ -450,13 +452,59 @@ MAP
       END
       TYPE LINE
       COMPOSITE
-        OPACITY 10
+        OPACITY 50
       END # COMPOSITE
       CLASS
         GROUP 'Waterways'
         NAME 'Waterways'
         STYLE
           COLOR '#365F83'
+          WIDTH 1.2
+        END
+      END 
+    END
+
+    LAYER
+      NAME "edges"
+      DATA 'data/edges.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "EdgeId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE LINE
+      CLASS
+        GROUP 'Edges'
+        NAME 'Edges'
+        STYLE
+          COLOR 2 2 2
+          WIDTH 1.2
+        END
+      END 
+    END
+
+    LAYER
+      NAME "nodes"
+      DATA 'data/nodes.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "NodeId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE POINT
+      CLASS
+        GROUP 'Nodes'
+        NAME 'Nodes'
+        STYLE
+          COLOR 2 2 2
+          SYMBOL "filled_circle"
+          SIZE 5
         END
       END 
     END
