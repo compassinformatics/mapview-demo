@@ -508,6 +508,27 @@ MAP
         END
       END 
     END
+    
+    LAYER
+      NAME "polygons"
+      DATA 'data/polygons.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "PolygonId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE POLYGON
+      CLASS
+        GROUP 'Polygons'
+        NAME 'Polygons'
+        STYLE
+          OUTLINECOLOR 50 50 50
+        END
+      END 
+    END    
 
     LAYER
       NAME "municipal_bounds"
