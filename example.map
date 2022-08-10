@@ -487,6 +487,72 @@ MAP
     END
 
     LAYER
+      NAME "footways"
+      DATA 'data/footways.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "EdgeId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE LINE
+      CLASS
+        GROUP 'Footways'
+        NAME 'Footways'
+        STYLE
+          COLOR "#808080" # gray
+          WIDTH 1.2
+        END
+      END 
+    END
+
+    LAYER
+      NAME "cycleways"
+      DATA 'data/cycleways.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "EdgeId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE LINE
+      CLASS
+        GROUP 'Cycleways'
+        NAME 'Cycleways'
+        STYLE
+          COLOR "#7393B3" # bluegray
+          WIDTH 1.2
+        END
+      END 
+    END
+
+    LAYER
+      NAME "services"
+      DATA 'data/services.shp'
+      METADATA
+          "gml_include_items" "all"
+          "gml_types" "auto"
+          "gml_featureid" "EdgeId"
+      END
+      PROJECTION
+        "init=epsg:3857"
+      END
+      TYPE LINE
+      CLASS
+        GROUP 'Services'
+        NAME 'Services'
+        STYLE
+          COLOR "#36454F" # charcoal
+          WIDTH 1.2
+        END
+      END
+    END
+
+    LAYER
       NAME "nodes"
       DATA 'data/nodes.shp'
       METADATA
