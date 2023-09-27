@@ -80,7 +80,7 @@ MAP
         TYPE ellipse
         FILLED true
         POINTS 1 1 END
-        NAME "filled_circle"
+        NAME "circle"
     END
     SYMBOL
         TYPE ellipse
@@ -188,6 +188,7 @@ MAP
             SYMBOL "cross"
             SIZE 8
             COLOR "#ffd966"
+            OUTLINECOLOR "#ffd966"
           END
       END
     END
@@ -215,19 +216,19 @@ MAP
         EXPRESSION ("[COMP]" = "AMAX")
         NAME 'AMAX'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 255 0 0
           OUTLINECOLOR 0 0 255
         END 
       END
       CLASS
-        GROUP "Type"      
+        GROUP "Type"
         EXPRESSION ("[COMP]" = "AMOC")
         NAME 'AMOC'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 0 255 0
         END 
       END
@@ -236,8 +237,8 @@ MAP
         EXPRESSION ("[COMP]" = "AVOC")
         NAME 'AVOC'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 0 255 255
         END 
       END
@@ -246,8 +247,8 @@ MAP
         EXPRESSION ("[COMP]" = "CHEV")
         NAME 'CHEV'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 255 255 0
         END 
       END
@@ -256,8 +257,8 @@ MAP
         EXPRESSION ("[COMP]" = "ROAD")
         NAME 'ROAD'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 255 225 255
         END 
       END
@@ -266,8 +267,8 @@ MAP
         EXPRESSION ("[COMP]" = "GSI")
         NAME 'GSI'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 68 192 170
         END 
       END
@@ -276,8 +277,8 @@ MAP
         EXPRESSION ("[COMP]" = "SHAL")
         NAME 'SHAL'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 227 33 132
         END 
       END
@@ -286,29 +287,39 @@ MAP
         EXPRESSION ("[COMP]" = "PENN")
         NAME 'PENN'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 25 33 132
         END 
       END
       
       CLASS
         GROUP "Depth"
+        EXPRESSION ([OD_METRES] < 0)
+        NAME '< 0m'
+        STYLE
+          SYMBOL "circle"
+          SIZE 6
+          COLOR 55 55 55
+        END 
+      END
+      CLASS
+        GROUP "Depth"
         EXPRESSION ([OD_METRES] >= 0 AND [OD_METRES] <= 50)
         NAME '0 to 50m'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 68 192 170
         END 
       END
       CLASS
         GROUP "Depth"
         EXPRESSION ([OD_METRES] > 50 AND [OD_METRES] <= 100)
-        NAME '0 to 100m'
+        NAME '50 to 100m'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 227 33 132
         END 
       END
@@ -317,29 +328,28 @@ MAP
         EXPRESSION ([OD_METRES] > 100)
         NAME '> 100m'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 3
+          SYMBOL "circle"
+          SIZE 6
           COLOR 25 33 132
         END 
       END
-
       CLASS
         GROUP "Unthemed"
         NAME 'Borehole'
         STYLE
-          SYMBOL "filled_circle"
+          SYMBOL "circle"
           SIZE 6
           COLOR 50 50 50
           OUTLINECOLOR 0 0 0
         END 
       END
-
     CLASS
         GROUP "labels"
-        TEXT "[ID]"
+        TEXT "[ID]: [OD_METRES]m"
         LABEL
             ANGLE AUTO
             COLOR  49 79 79
+            OFFSET 10 10
             OUTLINECOLOR 255 255 255
             FONT "arial"
             TYPE truetype
@@ -569,7 +579,7 @@ MAP
         NAME 'Nodes'
         STYLE
           COLOR 2 2 2
-          SYMBOL "filled_circle"
+          SYMBOL "circle"
           SIZE 5
         END
       END 
@@ -648,7 +658,6 @@ MAP
       NAME "lasites"
       DEBUG 5
       TEMPLATE "ttt"
-
       CONNECTIONTYPE OGR
       CONNECTION 'data/Local_Authority_Sites.shp'
 
@@ -664,13 +673,11 @@ MAP
       CLASS
         NAME 'Sites'
         STYLE
-          SYMBOL "filled_circle"
-          SIZE 5        
+          SYMBOL "circle"
+          SIZE 5
           COLOR 218 112 214
         END # STYLE
       END # CLASS
     END # LAYER
     
 END
-
-
