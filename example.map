@@ -1,7 +1,7 @@
 MAP
     NAME "MapviewDemo"
     EXTENT -1981303.751 5648520.031 522771.571 8580038.317
-    CONFIG "PROJ_LIB" "\\MapServer\bin\proj7\SHARE"
+    #CONFIG "PROJ_LIB" "\\MapServer\bin\proj9\SHARE"
     CONFIG "MS_ERRORFILE" "log/mapserver.log"
     CONFIG "CPL_DEBUG" "OFF"
     FONTSET "fonts/fontset.txt"
